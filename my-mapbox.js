@@ -15,7 +15,8 @@ var mapAccessToken = "pk.eyJ1IjoidmllaWxsZWNhbSIsImEiOiJjajI5OXRpbHAwMTFnMzNzMXh
 
 var map = null;
 var geocoder = null;
-var draw = null;
+var allMarkers = null;
+var allTeamMembers = null;
 
 function initMap() {
   map = MapGL();
@@ -28,8 +29,7 @@ function getAllTeamMembers() {
       {
         'type': 'Feature',
         'properties': {
-          'message': 'Foo',
-          'iconSize': [60, 60]
+          'message': 'Foo'
         },
         'geometry': {
           'type': 'Point',
@@ -39,8 +39,7 @@ function getAllTeamMembers() {
       {
         'type': 'Feature',
         'properties': {
-          'message': 'Bar',
-          'iconSize': [50, 50]
+          'message': 'Bar'
         },
         'geometry': {
           'type': 'Point',
@@ -50,8 +49,7 @@ function getAllTeamMembers() {
       {
         'type': 'Feature',
         'properties': {
-          'message': 'Baz',
-          'iconSize': [40, 40]
+          'message': 'Baz'
         },
         'geometry': {
           'type': 'Point',
@@ -65,7 +63,7 @@ function getAllTeamMembers() {
 function MapGL() {
   mapboxgl.accessToken = mapAccessToken;
 
-  var allTeamMembers = getAllTeamMembers();
+  allTeamMembers = getAllTeamMembers();
 
   // initialize map
   var newMap = new mapboxgl.Map({
@@ -84,24 +82,29 @@ function MapGL() {
   // marker.on('dragend', onDragEnd);
 
   // add markers to map
-  allTeamMembers.features.forEach(function (marker) {
+  allMarkers = allTeamMembers.features.map(function (marker) {
     // create a DOM element for the marker
     var el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundSize = 'cover';
     el.style.backgroundImage =
       'url(https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cf82de13-e845-48ca-880b-d311cb88af26/0_%285%29.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20200522%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20200522T023528Z&X-Amz-Expires=86400&X-Amz-Signature=5451025055d1c3fc11784abc179ddacc84a2d1fc15dac8990ad008a30556dd80&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220%2520%285%29.jpeg%22';
-    el.style.width = marker.properties.iconSize[0] + 'px';
-    el.style.height = marker.properties.iconSize[1] + 'px';
+    el.style.width ='40px';
+    el.style.height ='40px';
+
+    el.id = marker.properties.message;
 
     el.addEventListener('click', function () {
       window.alert(marker.properties.message);
     });
 
     // add marker to map
-    new mapboxgl.Marker(el, { draggable: true })
-      .setLngLat(marker.geometry.coordinates)
-      .addTo(newMap);
+    var marker = new mapboxgl.Marker(el, { draggable: true })
+      .setLngLat(marker.geometry.coordinates);
+
+    marker.addTo(newMap);
+
+    return marker;
   });
 
   return newMap;
