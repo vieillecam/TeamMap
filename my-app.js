@@ -47,19 +47,19 @@ function createGitHubGist(contents)
 	// construct the object for the hidden field that will be submitted to CodePen - see https://blog.codepen.io/documentation/api/prefill/
 	   
 	    // unauthenticated client
-	    const gh = new GitHub();
+	    // const gh = new GitHub();
 
-	    /* authenticated would look like this - there is daily limit on Gists for unauthenticated clients
-	    // const gh = new GitHub(
+	    // authenticated would look like this - there is daily limit on Gists for unauthenticated clients
+	    const gh = new GitHub(
 	    	{
-	        token: <<APITOKENHERE>> // api token from Github account
+	        token: '8308bd64eeda47a37c04d44c66757a52f9324426' // api token from Github account
 	    }
-	    ); */
+	    );
 
 	    let gist = gh.getGist(); // not a gist yet
 	    gist.create({
 	       public: true,
-	       description: 'My map',
+	       description: 'Team Map',
 	       files: {
 	          "mymap.json": {
 	             content: JSON.stringify(contents)

@@ -11,7 +11,7 @@ var mapCoordinates = [149.124779,-35.308586,];
 var mapZoom = 12;
 
 // the key from the Mapbox examples (not mine)
-var mapAccessToken = "pk.eyJ1IjoibWV0cmljb24iLCJhIjoiY2l3eTQxMWl3MDBmYTJ6cWg3YmZtdjdsMSJ9.2vDbTw3ysscpy3YWkHo6aA";
+var mapAccessToken = "pk.eyJ1IjoidmllaWxsZWNhbSIsImEiOiJjajI5OXRpbHAwMTFnMzNzMXhiamkwejhoIn0.QKpnSLH9Z6T7lw0wvM8c5Q";
 
 var map = null;
 var geocoder = null;
