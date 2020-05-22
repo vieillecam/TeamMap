@@ -7,8 +7,8 @@ function CurrentYear() {
   $("#currentYear").text(thisYear);
 }
 
-var mapCoordinates = [149.124779,-35.308586,];
-var mapZoom = 12;
+var mapCoordinates = [0, 0];
+var mapZoom = 2;
 
 // the key from the Mapbox examples (not mine)
 var mapAccessToken = "pk.eyJ1IjoidmllaWxsZWNhbSIsImEiOiJjajI5OXRpbHAwMTFnMzNzMXhiamkwejhoIn0.QKpnSLH9Z6T7lw0wvM8c5Q";
@@ -21,51 +21,89 @@ function initMap() {
   map = MapGL();
 }
 
+function getAllTeamMembers() {
+  return {
+    'type': 'FeatureCollection',
+    'features': [
+      {
+        'type': 'Feature',
+        'properties': {
+          'message': 'Foo',
+          'iconSize': [60, 60]
+        },
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-66.324462890625, -16.024695711685304]
+        }
+      },
+      {
+        'type': 'Feature',
+        'properties': {
+          'message': 'Bar',
+          'iconSize': [50, 50]
+        },
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-61.2158203125, -15.97189158092897]
+        }
+      },
+      {
+        'type': 'Feature',
+        'properties': {
+          'message': 'Baz',
+          'iconSize': [40, 40]
+        },
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-63.29223632812499, -18.28151823530889]
+        }
+      }
+    ]
+  };
+}
+
 function MapGL() {
   mapboxgl.accessToken = mapAccessToken;
 
+  var allTeamMembers = getAllTeamMembers();
+
   // initialize map
   var newMap = new mapboxgl.Map({
-      container: "map", // container id
-      style: "mapbox://styles/mapbox/light-v9", //stylesheet location
-      center: mapCoordinates, // starting position
-      zoom: mapZoom // starting zoom
+    container: "map", // container id
+    style: "mapbox://styles/mapbox/light-v9", //stylesheet location
+    center: mapCoordinates, // starting position
+    zoom: mapZoom // starting zoom
   });
 
-  var drawOptions = 
-    {
-      controls: 
-      { 
-        combine_features: false, 
-        polygon: true, 
-        line: true, 
-        point: true, 
-        line_string: true, 
-        trash:true 
-      },
-      displayControlsDefault: false
-    };
+  // var marker = new mapboxgl.Marker({
+  //   draggable: true
+  // })
+  //   .setLngLat([0, 0])
+  //   .addTo(newMap);
 
-  draw = new MapboxDraw(drawOptions);
+  // marker.on('dragend', onDragEnd);
 
-  newMap.addControl(draw);
-  
-  // event handlers
-  newMap.on("load", mapLoaded);
-  
+  // add markers to map
+  allTeamMembers.features.forEach(function (marker) {
+    // create a DOM element for the marker
+    var el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundImage =
+      'url(https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cf82de13-e845-48ca-880b-d311cb88af26/0_%285%29.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20200522%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20200522T023528Z&X-Amz-Expires=86400&X-Amz-Signature=5451025055d1c3fc11784abc179ddacc84a2d1fc15dac8990ad008a30556dd80&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%220%2520%285%29.jpeg%22';
+    el.style.width = marker.properties.iconSize[0] + 'px';
+    el.style.height = marker.properties.iconSize[1] + 'px';
+
+    el.addEventListener('click', function () {
+      window.alert(marker.properties.message);
+    });
+
+    // add marker to map
+    new mapboxgl.Marker(el, { draggable: true })
+      .setLngLat(marker.geometry.coordinates)
+      .addTo(newMap);
+  });
+
   return newMap;
 }
 
-function mapLoaded() {
-  // do stuff here
-
-  map.on("draw.create", drawCreate);
-  
-}
-
-function drawCreate(e)
-{
-  // close the alert about using not having drawn on map yet
-
-  $('#noDrawingsAlert').hide();
-}
