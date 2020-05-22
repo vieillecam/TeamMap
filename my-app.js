@@ -52,7 +52,7 @@ function createGitHubGist(contents)
 	    // authenticated would look like this - there is daily limit on Gists for unauthenticated clients
 	    const gh = new GitHub(
 	    	{
-	        token: '8308bd64eeda47a37c04d44c66757a52f9324426' // api token from Github account
+	        token: '99735e16bc2e6d8065ec857e53e778941f7a3860' // api token from Github account
 	    }
 	    );
 
@@ -61,7 +61,7 @@ function createGitHubGist(contents)
 	       public: true,
 	       description: 'Team Map',
 	       files: {
-	          "mymap.json": {
+	          "montrealTeamMap_born_locations.json": {
 	             content: JSON.stringify(contents)
 	          }
 	       }
